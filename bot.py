@@ -6,17 +6,78 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 from states import Registor
+from button import menu, computer_keyboard, computers, computers_info, phone_keyboard,  phones, phones_info
 
-TOKEN = ""
-ADMIN_ID = []
+TOKEN = "7181305178:AAEVp764bS7csy8A7lcAXUrNkj7Z9x--2hE"
+ADMIN_ID = [7241341727, 7376235983]
 
 dp = Dispatcher()
 
 @dp.message(CommandStart())
 async def command_start_handler(message: Message):
     full_name = message.from_user.full_name
-    text = f"Salom {full_name}, Ro'yxatdan o'tish botga hush kelibsiz"
+    text = f"Salom {full_name}, Shop botga hush kelibsiz"
+    await message.answer(text, reply_markup=menu)
+
+
+@dp.message(F.text=="💁🏻‍♂️ About us")
+async def about_button(message: Message):
+    text = "Biz sizga istalgan turdagi telefon yoki noutbuklarni sotib olishingizda yordam beramiz !"
+    pic_url = "https://i.pinimg.com/originals/40/a9/c3/40a9c329dba2278c9775798067ebae2d.jpg"
+    await message.answer_photo(pic_url, caption=text)
+
+@dp.message(F.text=="☎️ Contact admin")
+async def contact_button(message: Message):
+    text = "Bot adminiga murojat qilish uchun: \nTel: +998 99 999 99 99"
     await message.answer(text)
+
+
+@dp.message(F.text=="📍 Location")
+async def location(message: Message):
+    text = "Bizning savdo markazimizning lokatsiyasi!"
+    lat = 40.102607
+    lon = 65.37462
+    await message.answer_location(lat, lon)
+    await message.answer(text)
+
+@dp.message(F.text == "💻 Computers")
+async def computer_button(message: Message):
+    text = "Noutbuk turini tanlang!"
+    await message.answer(text, reply_markup=computer_keyboard)
+
+@dp.message(F.text.in_(computers))
+async def show_computer_info(message: Message):
+    selected_computer = message.text  
+    info = computers_info.get(selected_computer)  
+
+    if info:
+        photo = info['rasm']
+        price = info['narxi']
+        color = info['rangi']
+        text = f"Kompyuter nomi: {selected_computer}\nNarxi: {price} USD\nRangi: {color}"
+
+        await message.answer_photo(photo, caption=text)
+    else:
+        await message.answer("Ma'lumot topilmadi.")
+        
+@dp.message(F.text == "📱 Phones")
+async def phone_button(message: Message):
+    text = "Telefon turini tanlang!"
+    await message.answer(text, reply_markup=phone_keyboard)
+
+@dp.message(F.text.in_(phones))
+async def show_phone_info(message: Message):
+    selected_phone = message.text  
+    info = phones_info.get(selected_phone)  
+
+    if info:
+        photo = info['rasm']
+        price = info['narxi']
+        color = info['rangi']
+        text = f"Telefon nomi: {selected_phone}\nNarxi: {price} USD\nRangi: {color}"
+        await message.answer_photo(photo, caption=text)
+    else:
+        await message.answer("Ma'lumot topilmadi.")
 
 @dp.message(Command("reg"))
 async def register(message: Message, state:FSMContext):
