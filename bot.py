@@ -8,8 +8,8 @@ from aiogram.fsm.context import FSMContext
 from states import Registor
 from button import menu, computer_keyboard, computers, computers_info, phone_keyboard,  phones, phones_info
 
-TOKEN = "7181305178:AAEVp764bS7csy8A7lcAXUrNkj7Z9x--2hE"
-ADMIN_ID = [7241341727, 7376235983]
+TOKEN = "token"
+ADMIN_ID = [000]
 
 dp = Dispatcher()
 
